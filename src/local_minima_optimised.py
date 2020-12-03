@@ -3,18 +3,12 @@
 # Description: Function find_local_minima() finds the smallest value for a given function and range.
 # Optimization: Smaller range can be searched to achieve the same result.
 
-def find_local_minima(function, step_precision, range_start, range_end):
+def find_local_minima(function, precision, range_start, range_end):
 
-    smallest_y_value = function(range_start)
-    local_minima = range_start
+    while(range_end - range_start >= precision):
+         range_start, range_end = minimize_range(function, range_start, range_end)
 
-    for x in range(range_start, int(range_end * float(step_precision)), 1):
-        x = x / step_precision
-        if (function(x) < smallest_y_value):
-            smallest_y_value = function(x)
-            local_minima = x
-
-    return local_minima, smallest_y_value
+    return range_start, range_end
 
 
 def minimize_range(function, range_start, range_end):
@@ -36,10 +30,7 @@ if __name__ == '__main__':
 
     function = lambda x : x + (1.0 / (x *x))
     searched_range = [1, 2]
-    searched_range = minimize_range(function, *searched_range)
-
-    local_minima, smallest_y_value = find_local_minima(function, 100_000, *searched_range)
+    range_start, range_end = find_local_minima(function, 0.001, *searched_range)
 
     print("Searched range:", searched_range)
-    print("Found following local minima:", local_minima)
-    print("Y axis value for this local minima:", smallest_y_value)
+    print("Local minima is in the following range:", range_start, range_end)
